@@ -1,12 +1,13 @@
-import { AlbumRepository } from './../../repositories/AlbumRepository';
-import { Album } from "../../Entities/Album";
-import { UseCase } from "../Usecase";
+import {AlbumRepository} from "../../repositories/AlbumRepository";
+import {UseCase} from "../Usecase";
 
-export class GetAlbums implements UseCase<void, Promise<Album[]>> {
-    constructor(private readonly albumRepository: AlbumRepository) {}
+export class GetAlbums implements UseCase<void, Promise<Object[]>> {
+    constructor(private readonly albumRepository: AlbumRepository) {
+    }
 
-    execute(): Promise<Album[]>  {
-        const albumArray = this.albumRepository.getAlbums()
-        return Promise.resolve(albumArray)
-    }  
+    async execute(): Promise<Object[]> {
+        const albumArray = await this.albumRepository.getAlbums();
+        return albumArray;
+    }
 }
+

@@ -4,9 +4,9 @@ import { Library } from '../../Entities/Library';
 import { UseCase } from './../Usecase';
 
 export type CreateLibraryInput = {
-    ownerId: string;
-    album?: AlbumProperties;
-    track?: TrackProperties;
+    userId: string;
+    title: string;
+    userLibraryId: string;
 }
 
 export class CreateLibrary implements UseCase<CreateLibraryInput, Library> {
@@ -14,12 +14,14 @@ export class CreateLibrary implements UseCase<CreateLibraryInput, Library> {
         private readonly libraryRepository: LibraryRepository,
         ) {}
 
-     execute(input: CreateLibraryInput): Promise<Library> {
+      execute(input: CreateLibraryInput): Promise<Library> { 
          const library = Library.create({
-            ownerId: input.ownerId,
-            album: input.album,
-            track: input.track
-        })
+             userId: input.userId,
+             title: input.title,
+             libraryId: input.userLibraryId,
+         })
+        this.libraryRepository.create(library)
         return Promise.resolve(library)
     }
 }
+

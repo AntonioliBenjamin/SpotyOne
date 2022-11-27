@@ -1,15 +1,21 @@
 import {Track} from "../Entities/Track";
 import {TrackUpdatedInput} from "../Usecases/track/UpdateTrack";
-import {TrackDeletedInput} from "../Usecases/track/DeleteTrack";
-
 
 export interface TrackRepository {
     create(input: Track): Promise<Track>;
 
     getByUserId(userId: string): Promise<Track>;
 
-    update(input: TrackUpdatedInput): Promise<Track>;
+    getTracks(): Promise<Object[]>;
 
-    delete(input: TrackDeletedInput): Promise<Track>;
+    update(input: Track): Promise<Track>;
+
+    delete(userId: string): Promise<void>;
+
+    getById(trackId: string): Promise<Track>;
+
+    getByTitle(title: string): Promise<Track>;
+
+    exist(trakcTitle: string, artist: string): Promise<Boolean> 
 
 }

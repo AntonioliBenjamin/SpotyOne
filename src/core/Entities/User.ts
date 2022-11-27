@@ -1,3 +1,6 @@
+import { AlbumProperties } from "./Album";
+import { TrackLibraryProperties } from "./Library";
+
 export type UserProperties = {
     id: string;
     userName: string;
@@ -5,7 +8,7 @@ export type UserProperties = {
     password: string;
     created: Date;
     updated: Date;
-    library: [];
+    libraryId: string;
 }
 
 export class User {
@@ -20,17 +23,29 @@ export class User {
         userName: string;
         email: string;
         password: string;
+        libraryId: string;
     }) {
         return new User({
             id: props.id,
-            userName: props.userName.trim(),
+            userName: props.userName.toLowerCase().trim(),
             email: props.email.toLowerCase().trim(),
             password: props.password,
             created: new Date(),
             updated: null,
-            library: [],
+            libraryId: props.libraryId,
         })
+    }
+
+    update (props:{
+        userName: string;
+        email: string;
+        password: string;
+    }   )
+    {
+        this.props.userName=props.userName.toLowerCase().trim();
+        this.props.email=props.email.toLowerCase().trim();
+        this.props.password=props.password;
+        this.props.updated= new Date();
     }
 }
 
-//test

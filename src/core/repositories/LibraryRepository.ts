@@ -1,13 +1,12 @@
-import { Library } from './../Entities/Library';
+import { Library } from "./../Entities/Library";
 
 export interface LibraryRepository {
-    create(input: Library): Promise<Library>;
+  create(library: Library): Promise<Library>;
 
-    getByOwnerId(ownerId: string): Promise<Library>
-    
-    update(input: Library): Promise<Library>;
+  getByUserId(userId: string): Promise<Library>;
 
-    delete(ownerId: string): Promise<string>;
+  update(input: Library): Promise<Library>;
 
-    
+  delete(input: string): Promise<void>;
+
 }

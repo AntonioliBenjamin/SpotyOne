@@ -1,36 +1,47 @@
-import { IdGateway } from './../../gateways/IdGateway';
+import { IdGateway } from "./../../gateways/IdGateway";
 import { AlbumRepository } from "./../../repositories/AlbumRepository";
 import { Album, TrackProperties } from "../../Entities/Album";
 import { UseCase } from "../Usecase";
 
 export type AlbumInput = {
   albumId: string;
-  ownerId: string;  
+  userId: string;
   albumTitle: string;
   file: string;
-  tracksCount: number;
-  totalDuration: number;
   tracks: Array<TrackProperties>;
-}
+};
 
-export class CreateAlbum implements UseCase<Album, Promise<Album>> {
+export type CreateAlbumPropertiesInput = {
+  userId: string,
+  artist: string,
+  albumTitle: string,
+  file: string,
+  tracks: Array<TrackProperties>,
+}
+export class CreateAlbum implements UseCase<CreateAlbumPropertiesInput, Promise<Album>> {
   constructor(
     private readonly albumRepository: AlbumRepository,
-    private readonly idGateway: IdGateway,
-    ) {}
+    private readonly idGateway: IdGateway
+  ) {}
 
-  execute(input: Album): Promise<Album> {
-    const albumId = this.idGateway.generate()
+  async execute(input: CreateAlbumPropertiesInput): Promise<Album> {
+    const isAlreadyCreated = await this.albumRepository.exist(
+      input.albumTitle,
+      input.artist
+    );
+    if (isAlreadyCreated) {
+      throw new Error("Album already exists");
+    }
+    const albumId = this.idGateway.generate();
     const album = Album.create({
       albumId: albumId,
-      ownerId: input.props.ownerId,
-      albumTitle: input.props.albumTitle,
-      file: input.props.file,
-      tracks: input.props.tracks,
-      tracksCount: input.props.tracksCount,
-      totalDuration: input.props.totalDuration,
+      userId: input.userId,
+      artist: input.artist,
+      albumTitle: input.albumTitle,
+      file: input.file,
+      tracks: input.tracks,
     });
-    this.albumRepository.create(album)
-    return Promise.resolve(album);
+    await this.albumRepository.create(album);
+    return album;
   }
 }

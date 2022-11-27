@@ -1,16 +1,20 @@
-import { UpdateAlbumInput } from './../Usecases/album/UpdateAlbum';
 import { Album } from "../Entities/Album";
 
 export interface AlbumRepository {
-    create(input: Album): Promise<Album>;
+  create(input: Album): Promise<Album>;
 
-    getAlbums(): Promise<Album[]>;
+  getAlbums(): Promise<Object[]>;
 
-    getAlbumById(albumId: string): Promise<Album>;
+  getAlbumById(albumId: string): Promise<Album>;
 
-    updateAlbum(input: UpdateAlbumInput): Promise<Album>;
+  getAlbumByTitle(albumTitle: string) : Promise<Album>;
 
-    deleteAlbum(albumId: string): Promise<string>;
+  updateAlbum(input: Album): Promise<Album>;
 
-    getAlbumByOwnerId(ownerId: string): Promise<Album>
+  deleteAlbum(albumId: string): void;
+
+  getAlbumByUserId(userId: string): Promise<Album>;
+
+  exist(albumTitle: string, artist: string): Promise<boolean>
+
 }

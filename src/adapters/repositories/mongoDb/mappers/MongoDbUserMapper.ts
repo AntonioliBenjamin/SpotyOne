@@ -5,11 +5,11 @@ export class MongoDbUserMapper {
   toUser(userModel: userModel): User {
     return new User({
       id: userModel.id,
-      created: userModel.created,
+      created: new Date(userModel.created),
       email: userModel.email,
       password: userModel.password,
       libraryId: userModel.libraryId,
-      updated: userModel.updated,
+      updated: new Date(userModel.updated),
       userName: userModel.userName,
     });
   }
@@ -17,11 +17,11 @@ export class MongoDbUserMapper {
   toUserModel(user: User): userModel {
     return {
       id: user.props.id,
-      created: user.props.created,
+      created: +user.props.created,
       email: user.props.email,
       libraryId: user.props.libraryId,
       password: user.props.password,
-      updated: user.props.updated,
+      updated: +user.props.updated,
       userName: user.props.userName,
     };
   }

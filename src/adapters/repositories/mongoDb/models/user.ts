@@ -5,8 +5,8 @@ export type userModel = {
   userName: string;
   email: string;
   password: string;
-  created: Date;
-  updated?: Date;
+  created: number;
+  updated?: number;
   libraryId: string;
 };
 

@@ -8,6 +8,7 @@ describe('Integration - MongoDbAlbumRepository', () => {
 
     let album: Album;
     let album2: Album;
+    let album3: Album;
     let result: Album
     const mongoDbAlbumRepository = new MongoDbAlbumRepository();
 
@@ -62,6 +63,30 @@ describe('Integration - MongoDbAlbumRepository', () => {
                 },
             ],
         });
+
+        album3 = new Album({
+            albumId: "123456789",
+            userId: "userId",
+            albumTitle: "Album Title 3",
+            artist: "Album Artist 3",
+            file: "hhtp://../album",
+            tracks:
+                [{
+                    trackId: "132354",
+                    trackTitle: "title"
+                },
+                    {
+                        trackId: "789798",
+                        trackTitle: "title"
+                    },
+                    {
+                        trackId: "4654654687",
+                        trackTitle: "title"
+                    }
+                ],
+            created: new Date(10),
+            updated: null,
+        })
     });
 
     beforeEach(async () => {
@@ -83,7 +108,6 @@ describe('Integration - MongoDbAlbumRepository', () => {
             "Album Title",
             "Artist",
         );
-        console.log();
         await expect(test).toBeTruthy();
     })
 
@@ -117,7 +141,7 @@ describe('Integration - MongoDbAlbumRepository', () => {
 
     it("Should get album by id", async () => {
         const result = await mongoDbAlbumRepository.getAlbumById(album.props.albumId);
-        await expect(result).toEqual(album);
+        await expect(result.props.albumTitle).toEqual(album.props.albumTitle);
     })
 
     it("Should throw if album not found by id", async () => {
@@ -127,7 +151,7 @@ describe('Integration - MongoDbAlbumRepository', () => {
 
     it("Should get album by userId", async () => {
         const result = await mongoDbAlbumRepository.getAlbumByUserId(album.props.userId);
-        await expect(result).toEqual(album);
+        await expect(result.props.albumTitle).toEqual(album.props.albumTitle);
     })
 
     it("Should throw if album not found by userId", async () => {
@@ -137,7 +161,7 @@ describe('Integration - MongoDbAlbumRepository', () => {
 
     it("Should get album by title", async () => {
         const result = await mongoDbAlbumRepository.getAlbumByTitle(album.props.albumTitle);
-        await expect(result).toEqual(album);
+        await expect(result.props.albumTitle).toEqual(album.props.albumTitle);
     })
 
     it("Should throw if album not found by title", async () => {
@@ -148,12 +172,24 @@ describe('Integration - MongoDbAlbumRepository', () => {
     it("Should get all albums", async () => {
         await mongoDbAlbumRepository.create(album2);
         const result = await mongoDbAlbumRepository.getAlbums();
-        console.log(result);
         await expect(result).toHaveLength(2);
     })
 
     it("Should delete album ", async () => {
         const result = await mongoDbAlbumRepository.deleteAlbum(album.props.albumId);
         await expect(result).toBeFalsy();
+    })
+
+    it("Should get all albums by date", async () => {
+        await mongoDbAlbumRepository.create(album2);
+        await mongoDbAlbumRepository.create(album3);
+        const result = await mongoDbAlbumRepository.getAlbumsByDate();
+        expect(result[0]).toEqual({
+            albumTitle: 'Album Title 3',
+            artist: 'Album Artist 3',
+            created: new Date(10)
+        })
+
+
     })
 })

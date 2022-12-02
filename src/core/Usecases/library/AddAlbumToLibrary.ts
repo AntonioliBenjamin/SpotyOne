@@ -2,6 +2,8 @@ import { AlbumRepository } from "./../../repositories/AlbumRepository";
 import { LibraryRepository } from "../../repositories/LibraryRepository";
 import { Library } from "./../../Entities/Library";
 import { UseCase } from "./../Usecase";
+import { TrackErrors } from "../../errors/TracksErrors";
+import { LibraryErrors } from "../../errors/LibraryErrors";
 export type AddAlbumToLibraryInput = {
   title: string;
   userId: string;
@@ -18,7 +20,7 @@ export class AddAlbumToLibrary
     const album = await this.albumRepository.getAlbumByTitle(input.title);
     const canAddAlbum = library.canAddAlbum(album.props.albumId);
     if (!canAddAlbum) {
-      throw new Error("album already added");
+      throw new LibraryErrors.AlbumAlreadyAdded("album already added")
     }
 
     library.addAlbum({

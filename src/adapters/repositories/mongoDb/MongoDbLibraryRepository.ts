@@ -1,30 +1,29 @@
-import { MongoDbLibraryMapper } from './mappers/MongoDbLibraryMapper';
+import { MongoDbLibraryMapper } from "./mappers/MongoDbLibraryMapper";
 import { LibraryModel } from "./models/library";
 import { Library } from "../../../core/Entities/Library";
 import { LibraryRepository } from "./../../../core/repositories/LibraryRepository";
-const mongoDbLibraryMapper = new MongoDbLibraryMapper()
+import { LibraryErrors } from "../../../core/errors/LibraryErrors";
+const mongoDbLibraryMapper = new MongoDbLibraryMapper();
 
 export class MongoDbLibraryRepository implements LibraryRepository {
   async create(library: Library): Promise<Library> {
     const libraryModelMapper = mongoDbLibraryMapper.toLibraryModel(library);
     const libraryModel = new LibraryModel(libraryModelMapper);
-    await libraryModel
-      .save()
-      
+    await libraryModel.save();
+
     return library;
   }
 
   async getByUserId(userId: string): Promise<Library> {
     const library = await LibraryModel.findOne({ userId: userId });
     if (!library) {
-      throw new Error("cannto found library");
+      throw new LibraryErrors.NotFound("Library not found");
     }
-    return mongoDbLibraryMapper.toLibrary(library)
-    
+    return mongoDbLibraryMapper.toLibrary(library);
   }
 
   async update(input: Library): Promise<Library> {
-    const libraryModelMapper = mongoDbLibraryMapper.toLibraryModel(input)
+    const libraryModelMapper = mongoDbLibraryMapper.toLibraryModel(input);
     await LibraryModel.findOneAndUpdate(
       { userId: libraryModelMapper.userId },
       {

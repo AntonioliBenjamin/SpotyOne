@@ -2,6 +2,7 @@ import {TrackRepository} from "../../repositories/TrackRepository";
 import {IdGateway} from "../../gateways/IdGateway";
 import {Track} from "../../Entities/Track";
 import {UseCase} from "../Usecase";
+import { TrackErrors } from "../../errors/TracksErrors";
 
 export type TrackInput = {
     trackTitle: string;
@@ -20,7 +21,7 @@ export class CreateTrack implements UseCase<TrackInput, Track> {
     async execute(input: TrackInput): Promise<Track> {
         const istrackExists = await this.trackRepository.exist(input.trackTitle, input.artist)
         if (istrackExists) {
-            throw new Error('track already exists')
+            throw new TrackErrors.AlreadyExist('track already exists')
         }
         const id = this.idGateway.generate();
 

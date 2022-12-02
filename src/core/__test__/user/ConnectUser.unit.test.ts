@@ -4,6 +4,7 @@ import { User } from "../../Entities/User";
 import { BcryptGateway } from "../adapters/gateways/BcryptGateway";
 import { CreateUser } from "../../Usecases/user/CreateUser";
 import { UuidGateway } from "../adapters/gateways/UuidGateway";
+import { UserErrors } from "../../errors/UserErrors";
 const dbConnectUser = new Map<string, User>();
 
 describe("When I call ConnectUser ====>", () => {
@@ -45,15 +46,20 @@ describe("When I call ConnectUser ====>", () => {
         email: "mimi@gmail.com",
         password: "1234",
       });
-    await expect(() => result()).rejects.toThrow();
+    await expect(() => result()).rejects.toThrow(UserErrors.NotFound);
   });
 
   it("should throw if password doesnt match ====>", async () => {
+    await createUser.execute({
+      userName: "JOJO",
+      email: "jojo@gmail.com",
+      password: "1234",
+    });
     const result = () =>
       connectUser.execute({
         email: "jojo@gmail.com",
         password: "5678",
       });
-    await expect(() => result()).rejects.toThrow();
+    await expect(() => result()).rejects.toThrowError(UserErrors.WrongPassword);
   });
 });

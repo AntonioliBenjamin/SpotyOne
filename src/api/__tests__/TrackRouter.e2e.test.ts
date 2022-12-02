@@ -103,6 +103,7 @@ describe("E2E - Track router", () => {
   });
 
   it("should get/tracks/date", async () => {
+    jest.setTimeout(1000)
     await trackRepository.create(track);
     await trackRepository.create(track2);
     await supertest(app)

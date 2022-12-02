@@ -3,6 +3,7 @@ import { InMemoryTrackRepository } from '../adapters/repositories/InMemoryTrackR
 import { AddTrackToLibrary } from '../../Usecases/library/AddTrackIdtoLibrary';
 import {Library} from "../../Entities/Library";
 import {InMemoryLibraryRepository} from "../adapters/repositories/InMemoryLibraryRepository";
+import { LibraryErrors } from '../../errors/LibraryErrors';
 const dbLibrary = new Map < string, Library>();
 const dbTrack = new Map < string, Track>();
 
@@ -51,10 +52,25 @@ describe('Unit - UpdateLibrary', () => {
     })
 
     it("should throw if the track is already added", async () => {
-        const result= () => addTrackToLibrary.execute({
-            trackTitle: "kit kat",
+        track = new Track({
+            artist: "artist name",
+            created: new Date(),
+            duration: 200,
+            userId: "8888",
+            file: "http://tracklink",
+            trackId: "9999",
+            trackTitle: "my track title",
+            updated: new Date(),
+        })
+        dbTrack.set(track.props.trackId, track)
+        await addTrackToLibrary.execute({
+            trackTitle: track.props.trackTitle,
             userId: "12345"         
         })
-        expect(() => result()).rejects.toThrow()
+        const result= () => addTrackToLibrary.execute({
+            trackTitle: track.props.trackTitle,
+            userId: "12345"         
+        })
+        expect(() => result()).rejects.toThrow(LibraryErrors.TrackAlreadyAdded)
     })
 })

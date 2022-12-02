@@ -15,7 +15,7 @@ describe("E2E - Album router", () => {
   let accessKey;
   let album: Album;
   let albumRepository: AlbumRepository;
-  let album2 : Album
+  let album2: Album;
 
   beforeAll(() => {
     accessKey = sign(
@@ -38,11 +38,11 @@ describe("E2E - Album router", () => {
       }
       console.info("Connected to mongodb");
     });
-    album = Album.create({
+    album = new Album({
       albumId: "1234",
       userId: "1463165",
-      albumTitle: "Album Title",
-      artist: "Artist",
+      albumTitle: "xxx",
+      artist: "xx",
       file: "hhtp://../album",
       tracks: [
         {
@@ -58,31 +58,33 @@ describe("E2E - Album router", () => {
           trackTitle: "title",
         },
       ],
+      created: new Date(100),
+      updated: null,
     });
 
-      album2 = new Album({
-          albumId: "123456789",
-          userId: "userId",
-          albumTitle: "Album Title 2",
-          artist: "Album Artist 2",
-          file: "hhtp://../album",
-          tracks:
-              [{
-                  trackId: "132354",
-                  trackTitle: "title"
-              },
-                  {
-                      trackId: "789798",
-                      trackTitle: "title"
-                  },
-                  {
-                      trackId: "4654654687",
-                      trackTitle: "title"
-                  }
-              ],
-          created: new Date(10),
-          updated: null,
-      })
+    album2 = new Album({
+      albumId: "123456789",
+      userId: "userId",
+      albumTitle: "Album Title 2",
+      artist: "Album Artist 2",
+      file: "hhtp://../album",
+      tracks: [
+        {
+          trackId: "132354",
+          trackTitle: "title",
+        },
+        {
+          trackId: "789798",
+          trackTitle: "title",
+        },
+        {
+          trackId: "4654654687",
+          trackTitle: "title",
+        },
+      ],
+      created: new Date(10),
+      updated: null,
+    });
     albumRepository = new MongoDbAlbumRepository();
   });
 
@@ -96,24 +98,25 @@ describe("E2E - Album router", () => {
     await mongoose.connection.close();
   });
 
-    it("should get /albums by date", async () => {
-        await albumRepository.create(album);
-        await albumRepository.create(album2);
+  it("should get /albums by date", async () => {
+    jest.setTimeout(5000);
+    await albumRepository.create(album);
+    await albumRepository.create(album2);
 
-        await supertest(app)
-            .get('/album/date')
-            .set("access_key", accessKey)
-            .expect((response) => {
-                console.log(response)
-                const responseBody = response.body;
-                expect(responseBody[0]).toEqual({
-                    albumTitle: 'Album Title 2',
-                    artist: 'Album Artist 2',
-                    created: new Date(10)
-                });
-            })
-            .expect(200);
-    });
+    await supertest(app)
+      .get("/album/date")
+      .set("access_key", accessKey)
+      .expect((response) => {
+        console.log(response);
+        const responseBody = response.body;
+        expect(responseBody[0]).toEqual({
+          albumTitle: "xxx",
+          artist: "xx",
+          created: new Date(100),
+        });
+      })
+      .expect(200);
+  });
 
   it("should post /album", async () => {
     await supertest(app)
@@ -154,7 +157,7 @@ describe("E2E - Album router", () => {
       .set("access_key", accessKey)
       .expect((response) => {
         const responseBody = response.body;
-        expect(responseBody.artist).toEqual("Artist");
+        expect(responseBody.artist).toEqual("xx");
         expect(responseBody.userId).toEqual("1463165");
         expect(responseBody.albumId).toEqual("1234");
       });
@@ -168,7 +171,7 @@ describe("E2E - Album router", () => {
       .set("access_key", accessKey)
       .expect((response) => {
         const responseBody = response.body;
-        expect(responseBody.artist).toEqual("Artist");
+        expect(responseBody.artist).toEqual("xx");
         expect(responseBody.albumId).toBeTruthy();
       })
       .expect(200);
@@ -186,8 +189,6 @@ describe("E2E - Album router", () => {
       .expect(200);
   });
 
-
-
   it("should patch /album", async () => {
     await albumRepository.create(album);
     await supertest(app)
@@ -196,9 +197,9 @@ describe("E2E - Album router", () => {
       .send({
         file: "http://newFilePath",
         tracks: {
-                  trackId: "newId",
-                  trackTitle: "new title",
-                },
+          trackId: "newId",
+          trackTitle: "new title",
+        },
         albumTitle: "new album title",
         artist: "newArtist",
         albumId: "1234",
@@ -218,8 +219,8 @@ describe("E2E - Album router", () => {
       .set("access_key", accessKey)
       .expect((response) => {
         const responseBody = response.body;
-        expect(responseBody.artist).toBeFalsy
-        expect(responseBody.id).toBeFalsy
+        expect(responseBody.artist).toBeFalsy;
+        expect(responseBody.id).toBeFalsy;
       })
       .expect(200);
   });

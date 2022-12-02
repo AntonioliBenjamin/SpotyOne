@@ -3,6 +3,7 @@ import {InMemoryLibraryRepository} from "../adapters/repositories/InMemoryLibrar
 import {InMemoryAlbumRespository} from "../adapters/repositories/InMemoryAlbumRespository";
 import {Album} from "../../Entities/Album";
 import {AddAlbumToLibrary} from "../../Usecases/library/AddAlbumToLibrary";
+import { LibraryErrors } from "../../errors/LibraryErrors";
 
 const dbLibrary = new Map<string, Library>();
 const dbAlbum = new Map<string, Album>();
@@ -66,7 +67,7 @@ describe('When I call AddAlbumToLibrary', () => {
             userId: library.props.userId,
             title: album.props.albumTitle
         })
-        await expect(() => result()).rejects.toThrow();
+        await expect(() => result()).rejects.toThrow(LibraryErrors.AlbumAlreadyAdded);
     })
 
 

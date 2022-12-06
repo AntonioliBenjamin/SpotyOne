@@ -10,6 +10,7 @@ export type UpdateAlbumInput = {
   albumTitle: string;
   artist: string;
   albumId: string;
+  cover: string;
 };
 
 export class UpdateAlbum implements UseCase<UpdateAlbumInput, Promise<Album>> {
@@ -20,6 +21,7 @@ export class UpdateAlbum implements UseCase<UpdateAlbumInput, Promise<Album>> {
     album.update({
       albumTitle: input.albumTitle,
       file: input.file,
+      cover: input.cover,
       tracks: input.tracks,
       artist: input.artist,
     });

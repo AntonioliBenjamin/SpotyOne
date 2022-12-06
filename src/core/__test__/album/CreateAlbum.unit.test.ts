@@ -46,6 +46,7 @@ describe("Unit - CreateAlbum", () => {
             file: album.props.file,
             tracks: album.props.tracks,
             userId: album.props.userId,
+            cover: ""
         });
     });
 
@@ -63,6 +64,7 @@ describe("Unit - CreateAlbum", () => {
             file: album.props.file,
             tracks: album.props.tracks,
             userId: album.props.userId,
+            cover: ""
         });
         await expect(async () => result()).rejects.toThrow(AlbumErrors.AlreadyExist);
     });

@@ -22,7 +22,7 @@ export class AddTrackToLibrary
     const library = await this.libraryRepository.getByUserId(input.userId);
     const isTrackAlreadyAdded = library.canAddTrack(track.props.trackId);
     if (!isTrackAlreadyAdded) {
-      throw new LibraryErrors.TrackAlreadyAdded("track already added")
+      throw new LibraryErrors.TrackAlreadyAdded()
     }
 
     library.addTrack({

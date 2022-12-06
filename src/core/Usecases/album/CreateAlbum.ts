@@ -17,6 +17,7 @@ export type CreateAlbumPropertiesInput = {
   artist: string,
   albumTitle: string,
   file: string,
+  cover: string,
   tracks: Array<TrackProperties>,
 }
 export class CreateAlbum implements UseCase<CreateAlbumPropertiesInput, Promise<Album>> {
@@ -38,6 +39,7 @@ export class CreateAlbum implements UseCase<CreateAlbumPropertiesInput, Promise<
       albumId: albumId,
       userId: input.userId,
       artist: input.artist,
+      cover: input.cover,
       albumTitle: input.albumTitle,
       file: input.file,
       tracks: input.tracks,

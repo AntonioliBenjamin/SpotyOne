@@ -8,9 +8,8 @@ export namespace LibraryErrors {
     }
 
     export class TrackAlreadyAdded extends DomainError {
-        message: string
-        constructor(message: string) {
-            super(message)
+        constructor() {
+            super("track already added")
         }
     }
 

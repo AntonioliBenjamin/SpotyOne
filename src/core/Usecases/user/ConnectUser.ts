@@ -24,7 +24,7 @@ export class ConnectUser implements UseCase<UserInput, User> {
 
         const comparePasswords = this.passwordGateway.decrypt(input.password, hash)
         if (!comparePasswords) {
-            throw new UserErrors.WrongPassword("wrong password")
+            throw new UserErrors.WrongPassword()
         }
         console.log('User connected successfully');
         return userExists;

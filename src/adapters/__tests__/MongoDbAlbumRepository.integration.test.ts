@@ -135,6 +135,7 @@ describe('Integration - MongoDbAlbumRepository', () => {
                     trackId: "132354",
                     trackTitle: "title",
                 },
+                cover: ""
         })
         const result = await mongoDbAlbumRepository.updateAlbum(album)
         await expect(result.props.albumTitle).toEqual("new album title");

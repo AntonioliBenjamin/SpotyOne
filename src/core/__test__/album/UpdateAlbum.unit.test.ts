@@ -47,6 +47,7 @@ describe("unit - UpdateAlbum", () => {
       albumTitle: "updated title",
       artist: "updated artist",
       albumId: "12345",
+      cover: ""
     });
     expect(result.props.albumTitle).toEqual("updated title");
     expect(result.props.tracks).toHaveLength(4);

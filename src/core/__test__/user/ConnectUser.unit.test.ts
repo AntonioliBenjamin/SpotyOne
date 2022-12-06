@@ -51,8 +51,8 @@ describe("When I call ConnectUser ====>", () => {
 
   it("should throw if password doesnt match ====>", async () => {
     await createUser.execute({
-      userName: "JOJO",
-      email: "jojo@gmail.com",
+      userName: "mich",
+      email: "mich@gmail.com",
       password: "1234",
     });
     const result = () =>

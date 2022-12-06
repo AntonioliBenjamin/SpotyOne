@@ -8,17 +8,15 @@ export namespace UserErrors {
     }
 
     export class WrongPassword extends DomainError {
-        message: string
-        constructor(message: string) {
-            super(message)
+        constructor() {
+            super("wrong password")
             
         }
     }
 
     export class AlreadyExist extends DomainError {
-        message: string
-        constructor(message: string) {
-            super(message)
+        constructor() {
+            super("user already exists")
         }
     }
 

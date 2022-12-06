@@ -10,6 +10,7 @@ export type albumModel = {
     userId: string,
     created: number,
     updated?: number,
+    cover?: string,
 }
 
 const albumSchema = new Schema({
@@ -55,6 +56,10 @@ const albumSchema = new Schema({
         type: Number,
         required: false,
     },
+    cover: {
+        type: String,
+        require: true,
+    }
 });
 
 export const AlbumModel = model("Album", albumSchema);

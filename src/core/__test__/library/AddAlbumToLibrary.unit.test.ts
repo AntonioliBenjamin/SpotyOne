@@ -56,13 +56,14 @@ describe('When I call AddAlbumToLibrary', () => {
                 albumId: "111",
                 title: "wmca"
             }],
+
             tracks: [],
             libraryId: "9999",
             title: "my library title",
             userId: "12345"
         })
         dbLibrary.set(library.props.libraryId, library);
-
+        
         const result = () => addAlbumToLibrary.execute({
             userId: library.props.userId,
             title: album.props.albumTitle

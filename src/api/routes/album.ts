@@ -9,8 +9,9 @@ import { GetAlbumByUserId } from "../../core/Usecases/album/GetAlbumByUserId";
 import { GetAlbums } from "../../core/Usecases/album/getAlbums";
 import { UpdateAlbum } from "../../core/Usecases/album/UpdateAlbum";
 import { DeleteAlbum } from "../../core/Usecases/album/DeleteAlbum";
-import {GetAlbumsByDate} from "../../core/Usecases/album/GetAlbumsByDate";
+import { GetAlbumsByDate } from "../../core/Usecases/album/GetAlbumsByDate";
 const albumRouter = express.Router();
+import { upload } from "../middlewares/multerMiddleware";
 const mongoDbAlbumRepository = new MongoDbAlbumRepository();
 const v4Gateway = new V4IdGateway();
 const createAlbum = new CreateAlbum(mongoDbAlbumRepository, v4Gateway);
@@ -19,9 +20,15 @@ const getAlbumByUserId = new GetAlbumByUserId(mongoDbAlbumRepository);
 const getAlbums = new GetAlbums(mongoDbAlbumRepository);
 const updateAlbum = new UpdateAlbum(mongoDbAlbumRepository);
 const deleteAlbum = new DeleteAlbum(mongoDbAlbumRepository);
-const getAlbumsByDate = new GetAlbumsByDate(mongoDbAlbumRepository)
+const getAlbumsByDate = new GetAlbumsByDate(mongoDbAlbumRepository);
 
 albumRouter.use(authorization);
+
+albumRouter.post("/cover", upload.single("cover"), function (req, res, next) {
+  return res.status(200).send({
+    path: `http://localhost:3004/${req.file.filename}`,
+  });
+});
 
 albumRouter.post("/", async (req: AuthentifiedRequest, res) => {
   const body = {
@@ -30,9 +37,15 @@ albumRouter.post("/", async (req: AuthentifiedRequest, res) => {
     tracks: req.body.tracks,
     userId: req.user.id,
     artist: req.body.artist,
+    cover: req.body.cover,
   };
   const album = await createAlbum.execute(body);
   return res.status(201).send(album.props);
+});
+
+albumRouter.get("/date/all", async (req: AuthentifiedRequest, res) => {
+  const album = await getAlbumsByDate.execute();
+  return res.status(200).send(album);
 });
 
 albumRouter.get("/:id", async (req: AuthentifiedRequest, res) => {
@@ -52,12 +65,6 @@ albumRouter.get("/", async (req: AuthentifiedRequest, res) => {
   return res.status(200).send(album);
 });
 
-albumRouter.get("/date", async (req: AuthentifiedRequest, res) => {
-  const album = await getAlbumsByDate.execute();
-  return res.status(200).send(album);
-});
-
-
 albumRouter.patch("/", async (req: AuthentifiedRequest, res) => {
   const body = {
     file: req.body.file,
@@ -65,6 +72,7 @@ albumRouter.patch("/", async (req: AuthentifiedRequest, res) => {
     albumTitle: req.body.albumTitle,
     artist: req.body.artist,
     albumId: req.body.albumId,
+    cover: req.body.cover,
   };
 
   const updatedAlbum = await updateAlbum.execute({
@@ -73,6 +81,7 @@ albumRouter.patch("/", async (req: AuthentifiedRequest, res) => {
     albumTitle: body.albumTitle,
     artist: body.artist,
     albumId: body.albumId,
+    cover: body.cover,
   });
 
   return res.status(200).send(updatedAlbum.props);

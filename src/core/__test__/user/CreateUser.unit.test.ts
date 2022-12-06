@@ -20,17 +20,7 @@ describe("When I call CreateUser ====>", () => {
       bcryptGateway
     );
   });
-
-  it("should create user", async () => {
-    const result = await createUser.execute({
-      userName: "JOJO",
-      email: "jojo@gmail.com",
-      password: "1234",
-    });
-    expect(result.props.id).toBeTruthy();
-    expect(result.props.userName).toEqual("jojo");
-  });
-
+  
   it("should throw if user already exists", async () => {
     await createUser.execute({
       userName: "JOJO",
@@ -45,4 +35,15 @@ describe("When I call CreateUser ====>", () => {
       });
     await expect(() => result()).rejects.toThrow(UserErrors.AlreadyExist);
   });
+  it("should create user", async () => {
+    const result = await createUser.execute({
+      userName: "michel",
+      email: "michel@gmail.com",
+      password: "1234",
+    });
+    expect(result.props.id).toBeTruthy();
+    expect(result.props.userName).toEqual("michel");
+  });
+
+ 
 });

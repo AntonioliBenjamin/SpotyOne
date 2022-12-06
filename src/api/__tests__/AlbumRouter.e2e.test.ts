@@ -10,6 +10,8 @@ import mongoose from "mongoose";
 import { albumRouter } from "../routes/album";
 import supertest from "supertest";
 const app = express();
+import fs from "fs";
+import path from "path";
 
 describe("E2E - Album router", () => {
   let accessKey;
@@ -44,6 +46,7 @@ describe("E2E - Album router", () => {
       albumTitle: "xxx",
       artist: "xx",
       file: "hhtp://../album",
+      cover: "",
       tracks: [
         {
           trackId: "132354",
@@ -68,6 +71,7 @@ describe("E2E - Album router", () => {
       albumTitle: "Album Title 2",
       artist: "Album Artist 2",
       file: "hhtp://../album",
+      cover: "",
       tracks: [
         {
           trackId: "132354",
@@ -104,16 +108,17 @@ describe("E2E - Album router", () => {
     await albumRepository.create(album2);
 
     await supertest(app)
-      .get("/album/date")
+      .get("/album/date/all")
       .set("access_key", accessKey)
       .expect((response) => {
-        console.log(response);
         const responseBody = response.body;
-        expect(responseBody[0]).toEqual({
-          albumTitle: "xxx",
-          artist: "xx",
-          created: new Date(100),
-        });
+        expect(JSON.stringify(responseBody[0])).toEqual(
+          JSON.stringify({
+            albumTitle: "Album Title 2",
+            artist: "Album Artist 2",
+            created: new Date(10),
+          })
+        );
       })
       .expect(200);
   });
@@ -223,5 +228,26 @@ describe("E2E - Album router", () => {
         expect(responseBody.id).toBeFalsy;
       })
       .expect(200);
+  });
+
+  it("should post /cover", async () => {
+    let fileName;
+    await albumRepository.create(album);
+    await supertest(app)
+      .post("/album/cover")
+      .set("access_key", accessKey)
+      .attach("cover", `${__dirname}/1670340691581_rick.jpg`)
+      .expect((response) => {
+        const responseBody = response.body;
+        expect(responseBody.path).toBeTruthy();
+        fileName = responseBody.path.split("/").pop();
+      })
+      .expect(200);
+    fs.unlink(path.resolve(`uploads/${fileName}`), (err) => {
+      if (err) {
+        throw err;
+      }
+      console.log("Delete File successfully.");
+    });
   });
 });

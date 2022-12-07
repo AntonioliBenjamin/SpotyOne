@@ -1,15 +1,6 @@
 import multer from 'multer';
 
-export const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "uploads")
-    },
-    filename: (req, file, cb) => {
-        const name = file.originalname.split(" ").join("_");
-        cb(null, `${Date.now()}_${name}`)
-    },  
-})
-
+const storage = multer.memoryStorage();
 export const upload = multer({ 
     storage: storage,
     fileFilter: (req, file, cb) => {

@@ -11,7 +11,6 @@ import { UpdateAlbum } from "../../core/Usecases/album/UpdateAlbum";
 import { DeleteAlbum } from "../../core/Usecases/album/DeleteAlbum";
 import { GetAlbumsByDate } from "../../core/Usecases/album/GetAlbumsByDate";
 const albumRouter = express.Router();
-import { upload } from "../middlewares/multerMiddleware";
 const mongoDbAlbumRepository = new MongoDbAlbumRepository();
 const v4Gateway = new V4IdGateway();
 const createAlbum = new CreateAlbum(mongoDbAlbumRepository, v4Gateway);
@@ -22,13 +21,9 @@ const updateAlbum = new UpdateAlbum(mongoDbAlbumRepository);
 const deleteAlbum = new DeleteAlbum(mongoDbAlbumRepository);
 const getAlbumsByDate = new GetAlbumsByDate(mongoDbAlbumRepository);
 
+
 albumRouter.use(authorization);
 
-albumRouter.post("/cover", upload.single("cover"), function (req, res, next) {
-  return res.status(200).send({
-    path: `http://localhost:3004/${req.file.filename}`,
-  });
-});
 
 albumRouter.post("/", async (req: AuthentifiedRequest, res) => {
   const body = {
@@ -96,4 +91,5 @@ albumRouter.delete("/:id", async (req: AuthentifiedRequest, res) => {
 
   res.sendStatus(200);
 });
+
 export { albumRouter };

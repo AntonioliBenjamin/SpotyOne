@@ -247,7 +247,6 @@ describe("E2E - Album router", () => {
       if (err) {
         throw err;
       }
-      console.log("Delete File successfully.");
     });
   });
 });

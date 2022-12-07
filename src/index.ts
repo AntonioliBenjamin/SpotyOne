@@ -7,6 +7,7 @@ import { albumRouter } from "./api/routes/album";
 import { userRouter } from "./api/routes/user";
 import path from 'path';
 import { clientErrorHandler } from "./api/middlewares/clientErrorHandler";
+import { uploadRouter } from "./api/routes/upload";
 const port = +process.env.PORT_KEY;
 
 mongoose.connect("mongodb://127.0.0.1:27017/spotyone_data", (err) => {
@@ -29,6 +30,8 @@ app.use("/track", trackRouter);
 app.use("/album", albumRouter);
 
 app.use("/library", libraryRouter);
+
+app.use("/upload", uploadRouter);
 
 app.use(clientErrorHandler)
 
